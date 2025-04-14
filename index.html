@@ -1,15 +1,41 @@
 <!-- https://calebgannon.com/2021/01/09/spectrogram-with-three-js-and-glsl-shaders/ -->
 <!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 <html lang="">
 <head>
 <!-- <script src="spectrogram.js"></script> -->
 <title>Spectrogram</title>
 <style>
-	* {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-} 
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: fixed;
+    }
+
+    main {
+        width: 100%;
+        height: 100%;
+    }
+
+    #Spectrogram {
+        width: 100%;
+        height: 100%;
+        display: block;
+        touch-action: none;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+        touch-action: none;
+    }
 </style>
 </head>
 <body>
@@ -195,18 +221,13 @@ document.addEventListener('click', function() {
         }
 
         function update_geometry() {
-            ANALYZER.getByteFrequencyData(DATA); // pipe FFT from analyzer into data array
-            // crypto.getRandomValues(DATA); // for testing
+            ANALYZER.getByteFrequencyData(DATA);
             let start_val = frequency_samples + 1;
-            let end_val = n_vertices - start_val;
-            heights.copyWithin(0, start_val, n_vertices + 1); // shift the array
-            heights.set(DATA, end_val-start_val); // copy the new data into the end of the array
-            mesh.geometry.setAttribute( 'displacement', new THREE.Uint8BufferAttribute( heights, 1 ) );
+            heights.copyWithin(0, start_val);
+            heights.set(DATA, heights.length - start_val);
+            mesh.geometry.setAttribute('displacement', new THREE.Uint8BufferAttribute(heights, 1));
         }
     }
 });
-
-
-
 </script>
 </html>
